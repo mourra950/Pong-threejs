@@ -54,8 +54,8 @@ let ball_x = 0;
 let ball_y = 0;
 let ball0_x = 0;
 let ball0_y = 0;
-let score1=0;
-let score2=0;
+let score1 = 0;
+let score2 = 0;
 let state = 0;
 //const boxhelp = new THREE.BoxHelper( paddle1, 0xffff00 );
 //scene.add( boxhelp);
@@ -158,21 +158,21 @@ function ball_update() {
         else if (ballbody.position.y < -10) {
             ball_y = (Math.abs(ball0_y))
         }
-        
+
         //check for ball passing players
         if (ball.position.x > 21) {
             state = 0;
-            ball.position.x=0;
-            ball.position.y=0;
+            ball.position.x = 0;
+            ball.position.y = 0;
             score2++;
-            document.querySelector('#score2').innerHTML=score2;
+            document.querySelector('#score2').innerHTML = score2;
         }
         else if (ball.position.x < -21) {
             state = 0
-            ball.position.x=0;
-            ball.position.y=0;
+            ball.position.x = 0;
+            ball.position.y = 0;
             score1++;
-            document.querySelector('#score1').innerHTML=score1;
+            document.querySelector('#score1').innerHTML = score1;
         }
 
         if (ballbody.aabb.overlaps(paddle1body.aabb)) {     //collision with player 1
@@ -185,8 +185,12 @@ function ball_update() {
         }
         ballbody.position.x += ball_x
         ballbody.position.y += ball_y
-
-        paddle1body.position.y = ballbody.position.y;
+        if (ball.position.y < 5.5){
+            paddle1body.position.y = ballbody.position.y;
+        }
+        if(ball.position.y >-5.5){
+            paddle1body.position.y = ballbody.position.y;
+        }
     }
 }
 
@@ -194,19 +198,20 @@ function game() {
     if (state == 0)//game starting
     {
         ballbody.position.set(0, 0, 0);
-        ball.position.set(0,0,0);
+        ball.position.set(0, 0, 0);
         ball_x = (Math.random() * 0.4) - 0.2;
         ball_y = (Math.random() * 0.3) - 0.15;
-        
+
     }
     else if (state == 1) {
-        ball_update();
+        ball_update(); 
         update_meshes();
 
     }
     else if (state == 2) {
         return;
     }
+    update_meshes();
 }
 
 document.addEventListener('keypress', (event) => {
@@ -221,10 +226,12 @@ document.addEventListener('keypress', (event) => {
     }
     //paddle2 controls main player
     if (event.key == 'w') {
-        paddle2body.position.y += 0.25
+        if (paddle2body.position.y < 8.5)
+            paddle2body.position.y += 0.25
     }
     if (event.key == 's') {
-        paddle2body.position.y -= 0.25
+        if (paddle2body.position.y > -8.50)
+            paddle2body.position.y -= 0.25
     }
 
 }, false);
