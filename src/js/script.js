@@ -90,18 +90,17 @@ ballbody.boundingSphereRadius = 0.2
 world.addBody(ballbody)
 world.addBody(paddle1body)
 world.addBody(paddle2body)
+//this function is called every frame to recalculate bouding boxes
+function updateAABb() {
+    ballbody.aabb.lowerBound = new CANNON.Vec3(ballbody.position.x - 0.1, ballbody.position.y - 0.1, -0.1);
+    ballbody.aabb.upperBound = new CANNON.Vec3(ballbody.position.x + 0.1, ballbody.position.y - 0.1, 0.1);
+    paddle1body.aabb.lowerBound = new CANNON.Vec3(paddle1body.position.x - 0.2, paddle1body.position.y - 1.5, -0.1);
+    paddle1body.aabb.upperBound = new CANNON.Vec3(paddle1body.position.x + 0.2, paddle1body.position.y + 1.5, 0.1);
+    paddle2body.aabb.lowerBound = new CANNON.Vec3(paddle2body.position.x - 0.2, paddle2body.position.y - 1.5, -0.1);
+    paddle2body.aabb.upperBound = new CANNON.Vec3(paddle2body.position.x + 0.2, paddle2body.position.y + 1.5, 0.1);
 
-function updateAABb()
-{
-    ballbody.aabb.lowerBound=new CANNON.Vec3(ballbody.position.x-0.1,ballbody.position.y-0.1, -0.1);
-    ballbody.aabb.upperBound=new CANNON.Vec3(ballbody.position.x+0.1, ballbody.position.y-0.1, 0.1);
-    paddle1body.aabb.lowerBound=new CANNON.Vec3(paddle1body.position.x-0.2,paddle1body.position.y-1.5, -0.1);
-    paddle1body.aabb.upperBound=new CANNON.Vec3(paddle1body.position.x+0.2,paddle1body.position.y+1.5, 0.1);
-    paddle2body.aabb.lowerBound=new CANNON.Vec3(paddle2body.position.x-0.2,paddle1body.position.y+1.5, -0.1);
-    paddle2body.aabb.upperBound=new CANNON.Vec3(paddle2body.position.x+0.2,paddle2body.position.y+1.5, 0.1);
+};
 
-}
-updateAABb()
 //###############################
 //this function is called to render every frame during runtime and to adjust screensize in case something changed
 function render() {
@@ -139,15 +138,26 @@ function resizeRendererToDisplaySize(renderer) {
     }
     return needResize;
 }
+
+
+//updating game meshes
+function update_meshes() {
+    paddle1.position.copy(paddle1body.position)
+    paddle2.position.copy(paddle2body.position)
+    ball.position.copy(ballbody.position)
+}
+//is called every frame to check if the game on to update the ball position and check if new dx or dy need to be assigned based on any collisions
 function ball_update() {
     if (state == 1) {
-        //check for wall collisions
+        
+        //check for bottom and top walls collisions to invert the y direction
         if (ballbody.position.y > 10) {
             ball_y = -(Math.abs(ball0_y))
         }
         else if (ballbody.position.y < -10) {
             ball_y = (Math.abs(ball0_y))
         }
+        
         //check for ball passing players
         if (ball.position.x > 21) {
             state = 0
@@ -155,20 +165,19 @@ function ball_update() {
         else if (ball.position.x < -21) {
             state = 0
         }
-        if(ballbody.aabb.overlaps(paddle1body.aabb))
-        {
+
+        if (ballbody.aabb.overlaps(paddle1body.aabb)) {     //collision with player 1
             ball_x = -(Math.abs(ball0_x))
+            ball0_x += 0.01
         }
-        else if(ballbody.aabb.overlaps(paddle2body.aabb))
-        {
+        else if (ballbody.aabb.overlaps(paddle2body.aabb)) { //collission with player 2
             ball_x = (Math.abs(ball0_x))
+            ball0_x += 0.01
         }
         ballbody.position.x += ball_x
         ballbody.position.y += ball_y
 
         paddle1body.position.y = ballbody.position.y;
-
-
     }
 }
 
@@ -181,10 +190,8 @@ function game() {
     }
     else if (state == 1) {
         ball_update();
+        update_meshes();
 
-        paddle1.position.copy(paddle1body.position)
-        paddle2.position.copy(paddle2body.position)
-        ball.position.copy(ballbody.position)
     }
     else if (state == 2) {
         return;
@@ -200,6 +207,13 @@ document.addEventListener('keypress', (event) => {
             ball0_y = ball_y;
 
         }
+    }
+    //paddle2 controls main player
+    if (event.key == 'w') {
+        paddle2body.position.y += 0.25
+    }
+    if (event.key == 's') {
+        paddle2body.position.y -= 0.25
     }
 
 }, false);
