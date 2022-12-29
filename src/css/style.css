@@ -16,3 +16,14 @@ body {
     
     display: block;
 }
+#score{
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    padding-top: 129px;
+}
+#score1,#score2
+{
+  font-size: 290px;
+  color: white;
+}

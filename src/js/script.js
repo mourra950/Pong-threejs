@@ -54,7 +54,8 @@ let ball_x = 0;
 let ball_y = 0;
 let ball0_x = 0;
 let ball0_y = 0;
-
+let score1=0;
+let score2=0;
 let state = 0;
 //const boxhelp = new THREE.BoxHelper( paddle1, 0xffff00 );
 //scene.add( boxhelp);
@@ -149,7 +150,7 @@ function update_meshes() {
 //is called every frame to check if the game on to update the ball position and check if new dx or dy need to be assigned based on any collisions
 function ball_update() {
     if (state == 1) {
-        
+
         //check for bottom and top walls collisions to invert the y direction
         if (ballbody.position.y > 10) {
             ball_y = -(Math.abs(ball0_y))
@@ -160,10 +161,18 @@ function ball_update() {
         
         //check for ball passing players
         if (ball.position.x > 21) {
-            state = 0
+            state = 0;
+            ball.position.x=0;
+            ball.position.y=0;
+            score2++;
+            document.querySelector('#score2').innerHTML=score2;
         }
         else if (ball.position.x < -21) {
             state = 0
+            ball.position.x=0;
+            ball.position.y=0;
+            score1++;
+            document.querySelector('#score1').innerHTML=score1;
         }
 
         if (ballbody.aabb.overlaps(paddle1body.aabb)) {     //collision with player 1
@@ -185,8 +194,10 @@ function game() {
     if (state == 0)//game starting
     {
         ballbody.position.set(0, 0, 0);
+        ball.position.set(0,0,0);
         ball_x = (Math.random() * 0.4) - 0.2;
         ball_y = (Math.random() * 0.3) - 0.15;
+        
     }
     else if (state == 1) {
         ball_update();
