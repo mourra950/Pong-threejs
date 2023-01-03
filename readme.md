@@ -1,4 +1,5 @@
 # Pong Game
+![image](https://user-images.githubusercontent.com/64339763/210290137-f096aa0f-5bcb-4658-9e22-044aa7c0082f.png)
 
 This is a simple pong game implemented in JavaScript using the three.js and cannon-es libraries.
 
