@@ -5,18 +5,25 @@ This is a simple pong game implemented in JavaScript using the three.js and cann
 ## How to Run
 
 to make the project work you follow this steps.
+to initialize the npm environment
 
 ```ssh
 npm init -y
 ```
 
+to install parcel file project manager
+
 ```ssh
 npm install parcel
 ```
 
+to install threejs the 3D game/web engine
+
 ```ssh
 npm install three
 ```
+
+to install cannon-es the physics engine for collision and so
 
 ```ssh
 npm install cannon-es
